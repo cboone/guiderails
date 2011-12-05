@@ -42,14 +42,16 @@ end
 run "git init" unless File.exist?(".git")
 
 # jquery
-inside "public/javascripts" do
-  wget "http://github.com/rails/jquery-ujs/raw/master/src/rails.js", "rails.js"
-  FileUtils.mkdir_p('jquery')
-  wget "http://code.jquery.com/jquery-1.4.4.min.js",                 "jquery/jquery.min.js"
+if yes?('Do you want to install the jQuery source files directly?')
+  FileUtils.mkdir_p('vendor/assets/javascripts/jquery')
+  inside "vendor/assets/javascripts/jquery" do
+    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery.js", "jquery.js"
+    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery_ujs.js", "jquery_ujs.js"
+  end
 end
 
 application do
-  "\n    config.action_view.javascript_expansions[:defaults] = %w(jquery.min rails)\n"
+  "\n    config.action_view.javascript_expansions[:defaults] = %w( jquery_ujs )\n"
 end
 
 gsub_file "config/application.rb", /# JavaScript.*\n/, ""
