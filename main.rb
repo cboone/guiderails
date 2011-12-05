@@ -54,9 +54,6 @@ application do
   "\n    config.action_view.javascript_expansions[:defaults] = %w( jquery_ujs )\n"
 end
 
-gsub_file "config/application.rb", /# JavaScript.*\n/, ""
-gsub_file "config/application.rb", /# config\.action_view\.javascript.*\n/, ""
-
 # gems
 create_file ".rvmrc", "rvm --create ruby-1.9.2-p180@#{@project}"
 
@@ -64,6 +61,10 @@ create_file ".rvmrc", "rvm --create ruby-1.9.2-p180@#{@project}"
 gsub_file 'Gemfile', /gem 'sqlite/, "# gem 'sqlite"
 gsub_file 'Gemfile', /#.*$/, ''
 gsub_file 'Gemfile', /\n[\n]+$/, "\n"
+
+# clean up application.rb
+gsub_file "config/application.rb", /# JavaScript.*\n/, ""
+gsub_file "config/application.rb", /# config\.action_view\.javascript.*\n/, ""
 
 # default gems
 inject_into_file 'Gemfile', :after => /gem 'rails'.*$/ do
