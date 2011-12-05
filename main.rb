@@ -41,19 +41,6 @@ end
 # git
 run "git init" unless File.exist?(".git")
 
-# jquery
-if yes?('Do you want to install the jQuery source files directly?')
-  FileUtils.mkdir_p('vendor/assets/javascripts/jquery')
-  inside "vendor/assets/javascripts/jquery" do
-    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery.js", "jquery.js"
-    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery_ujs.js", "jquery_ujs.js"
-  end
-end
-
-application do
-  "\n    config.action_view.javascript_expansions[:defaults] = %w( jquery_ujs )\n"
-end
-
 # gems
 create_file ".rvmrc", "rvm --create ruby-1.9.2-p180@#{@project}"
 
@@ -74,6 +61,21 @@ end
 gem 'bundler'
 gem 'auto_tagger', '0.2.3'
 gem 'heroku'
+
+# javascript
+if yes?('Do you want to use the jquery-rails gem?')
+  gem 'jquery-rails'
+elsif yes?('Or install the jQuery source files directly?')
+  FileUtils.mkdir_p('vendor/assets/javascripts/jquery')
+  inside "vendor/assets/javascripts/jquery" do
+    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery.js", "jquery.js"
+    wget "http://github.com/rails/jquery-rails/raw/master/src/jquery_ujs.js", "jquery_ujs.js"
+  end
+end
+
+application do
+  "\n    config.action_view.javascript_expansions[:defaults] = %w( jquery_ujs )\n"
+end
 
 # gemfile groups
 @test_gems = []
